@@ -163,6 +163,94 @@ p { margin-bottom: 1rem; max-width: 72ch; }
   white-space: nowrap;
 }
 
+/* ── Integral with stacked limits ── */
+.eq-int {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.15em;
+  line-height: 1;
+  position: relative;
+}
+.eq-int .int-top {
+  font-size: 0.6em;
+  color: var(--accent2);
+  order: 1;
+  margin-bottom: -0.15em;
+}
+.eq-int .int-sym {
+  font-size: 1.7em;
+  line-height: 1;
+  order: 2;
+}
+.eq-int .int-bot {
+  font-size: 0.6em;
+  color: var(--accent2);
+  order: 3;
+  margin-top: -0.2em;
+}
+
+/* ── Summation with stacked limits ── */
+.eq-sum {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.15em;
+  line-height: 1;
+}
+.eq-sum .sum-top {
+  font-size: 0.55em;
+  color: var(--accent2);
+  order: 1;
+  margin-bottom: -0.1em;
+}
+.eq-sum .sum-sym {
+  font-size: 1.4em;
+  line-height: 1;
+  order: 2;
+}
+.eq-sum .sum-bot {
+  font-size: 0.55em;
+  color: var(--accent2);
+  order: 3;
+  margin-top: -0.15em;
+}
+
+/* ── Superscript / subscript in equations ── */
+.equation sup {
+  font-size: 0.7em;
+  vertical-align: super;
+  line-height: 0;
+  color: var(--accent2);
+}
+.equation sub {
+  font-size: 0.7em;
+  vertical-align: sub;
+  line-height: 0;
+  color: var(--accent2);
+}
+
+/* ── Fraction ── */
+.eq-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.2em;
+  line-height: 1;
+}
+.eq-frac .frac-num {
+  border-bottom: 1px solid var(--accent);
+  padding: 0 0.3em 0.15em;
+  font-size: 0.85em;
+}
+.eq-frac .frac-den {
+  padding: 0.15em 0.3em 0;
+  font-size: 0.85em;
+}
+
 .math-block .eq-label {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.75rem;
@@ -187,6 +275,18 @@ p { margin-bottom: 1rem; max-width: 72ch; }
   font-family: 'IBM Plex Mono', monospace;
   color: var(--accent2);
   white-space: nowrap;
+}
+
+.symbol-table .sym sup {
+  font-size: 0.7em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.symbol-table .sym sub {
+  font-size: 0.7em;
+  vertical-align: sub;
+  line-height: 0;
 }
 
 .symbol-table .def {
@@ -383,19 +483,19 @@ footer a:hover { text-decoration: underline; }
   <p>Consider a signal containing two pure tones played in sequence: 220 Hz for the first half, then 440 Hz for the second. The Fourier Transform of the whole signal shows two sharp peaks — but you cannot tell whether the tones were sequential, simultaneous, or interleaved. All temporal structure is lost.</p>
 
   <div class="math-block">
-    <div class="equation">X(f) = ∫₋∞⁺∞ x(t) e⁻ʲ²πᶠᵗ dt</div>
+    <div class="equation">X(f) = <span class="eq-int"><span class="int-top">+∞</span><span class="int-sym">∫</span><span class="int-bot">−∞</span></span> x(t) · e<sup>−j2πft</sup> dt</div>
     <div class="eq-label">Eq. 1.1 — The Fourier Transform</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">X(f)</span><span class="def">Complex-valued spectrum: amplitude and phase at frequency f</span>
     <span class="sym">x(t)</span><span class="def">The time-domain signal — a real or complex function of continuous time t</span>
-    <span class="sym">e⁻ʲ²πᶠᵗ</span><span class="def">Complex sinusoidal basis function at frequency f (Euler's formula: cos 2πft − j sin 2πft)</span>
-    <span class="sym">∫₋∞⁺∞</span><span class="def">Integration over all time — the transform uses the <em>entire</em> signal, destroying temporal locality</span>
+    <span class="sym">e<sup>−j2πft</sup></span><span class="def">Complex sinusoidal basis function at frequency f (Euler's formula: cos 2πft − j sin 2πft). The exponent −j2πft encodes both the frequency f and the sign convention (negative for the forward transform)</span>
+    <span class="sym"><span class="eq-int" style="font-size:0.85em"><span class="int-top">+∞</span><span class="int-sym">∫</span><span class="int-bot">−∞</span></span></span><span class="def">Integration over all time — the transform uses the <em>entire</em> signal, destroying temporal locality</span>
     <span class="sym">j</span><span class="def">Imaginary unit (j² = −1), used in engineering convention (mathematicians write i)</span>
   </div>
 
-  <p>The key problem is that the basis functions e⁻ʲ²πᶠᵗ extend from −∞ to +∞. Every point in time contributes equally to every frequency coefficient. A brief click and a sustained tone at the same frequency produce identical Fourier magnitudes (differing only in phase structure that is extremely difficult to interpret visually).</p>
+  <p>The key problem is that the basis functions e<sup style="font-size:0.8em">−j2πft</sup> extend from −∞ to +∞. Every point in time contributes equally to every frequency coefficient. A brief click and a sustained tone at the same frequency produce identical Fourier magnitudes (differing only in phase structure that is extremely difficult to interpret visually).</p>
 
   <p>The Short-Time Fourier Transform solves this by a deceptively simple idea: <strong>chop the signal into short, overlapping segments, and compute the Fourier Transform of each one.</strong> By restricting our view to a local time window, each transform captures the spectral content of a brief moment.</p>
 
@@ -422,7 +522,7 @@ footer a:hover { text-decoration: underline; }
   <p>The continuous STFT is defined by multiplying the signal by a shifted window function, then taking the Fourier Transform of the product. This localises the analysis in time around the window's centre position τ.</p>
 
   <div class="math-block">
-    <div class="equation">S(τ, f) = ∫₋∞⁺∞ x(t) · w(t − τ) · e⁻ʲ²πᶠᵗ dt</div>
+    <div class="equation">S(τ, f) = <span class="eq-int"><span class="int-top">+∞</span><span class="int-sym">∫</span><span class="int-bot">−∞</span></span> x(t) · w(t − τ) · e<sup>−j2πft</sup> dt</div>
     <div class="eq-label">Eq. 2.1 — The Continuous STFT (analysis equation)</div>
   </div>
 
@@ -432,7 +532,7 @@ footer a:hover { text-decoration: underline; }
     <span class="sym">f</span><span class="def">Frequency variable (Hz). For each τ, S gives a full spectrum across all f</span>
     <span class="sym">x(t)</span><span class="def">Input signal. May be real-valued (audio, vibration) or complex (analytic signal, baseband comms)</span>
     <span class="sym">w(t − τ)</span><span class="def">Window function centred at time τ. Typically smooth, symmetric, and compactly supported (Hann, Gaussian, Hamming, Blackman, etc.)</span>
-    <span class="sym">e⁻ʲ²πᶠᵗ</span><span class="def">Complex exponential basis — extracts the component at frequency f via correlation</span>
+    <span class="sym">e<sup>−j2πft</sup></span><span class="def">Complex exponential basis — extracts the component at frequency f via correlation</span>
     <span class="sym">dt</span><span class="def">Infinitesimal time element. The integral sums contributions across the window's effective support</span>
   </div>
 
@@ -446,13 +546,13 @@ footer a:hover { text-decoration: underline; }
   <p>Yet another perspective: the STFT can be seen as the inner product of x(t) with a family of time–frequency atoms — translated and modulated copies of the window:</p>
 
   <div class="math-block">
-    <div class="equation">S(τ, f) = ⟨ x, w_{τ,f} ⟩   where   w_{τ,f}(t) = w(t − τ) · eʲ²πᶠᵗ</div>
+    <div class="equation">S(τ, f) = ⟨ x, w<sub>τ,f</sub> ⟩ &nbsp; where &nbsp; w<sub>τ,f</sub>(t) = w(t − τ) · e<sup>j2πft</sup></div>
     <div class="eq-label">Eq. 2.3 — STFT as inner product with time–frequency atoms</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">⟨ x, g ⟩</span><span class="def">Inner product in L²(ℝ): ∫ x(t) g*(t) dt, where * denotes complex conjugation</span>
-    <span class="sym">w_{τ,f}(t)</span><span class="def">Time–frequency atom: the window w shifted to time τ and modulated to frequency f</span>
+    <span class="sym">w<sub>τ,f</sub>(t)</span><span class="def">Time–frequency atom: the window w shifted to time τ and modulated to frequency f</span>
   </div>
 
   <p>This atom-based view connects the STFT to Gabor analysis (when w is a Gaussian) and reveals its geometric nature: each STFT coefficient measures the projection of the signal onto a localised sinusoidal "tile" in the time–frequency plane.</p>
@@ -483,12 +583,12 @@ footer a:hover { text-decoration: underline; }
   <h3>The rectangular window</h3>
 
   <div class="math-block">
-    <div class="equation">w_rect(t) = { 1,  if |t| ≤ N/2;    0,  otherwise }</div>
+    <div class="equation">w<sub>rect</sub>(t) = { 1, &nbsp;if |t| ≤ N/2; &nbsp; 0, &nbsp;otherwise }</div>
     <div class="eq-label">Eq. 3.1 — Rectangular (boxcar) window</div>
   </div>
 
   <div class="math-block">
-    <div class="equation">W_rect(f) = N · sinc(fN) = N · sin(πfN) / (πfN)</div>
+    <div class="equation">W<sub>rect</sub>(f) = N · sinc(fN) = N · <span class="eq-frac"><span class="frac-num">sin(πfN)</span><span class="frac-den">πfN</span></span></div>
     <div class="eq-label">Eq. 3.2 — Fourier Transform of the rectangular window</div>
   </div>
 
@@ -502,7 +602,7 @@ footer a:hover { text-decoration: underline; }
   <h3>The Hann (Hanning) window</h3>
 
   <div class="math-block">
-    <div class="equation">w_hann(n) = 0.5 · (1 − cos(2πn / (N−1))),   n = 0, 1, …, N−1</div>
+    <div class="equation">w<sub>hann</sub>(n) = 0.5 · (1 − cos(2πn / (N−1))), &nbsp; n = 0, 1, …, N−1</div>
     <div class="eq-label">Eq. 3.3 — Hann window (discrete form)</div>
   </div>
 
@@ -517,18 +617,18 @@ footer a:hover { text-decoration: underline; }
   <h3>The Gaussian window</h3>
 
   <div class="math-block">
-    <div class="equation">w_gauss(t) = e^(−t² / (2σ²))</div>
+    <div class="equation">w<sub>gauss</sub>(t) = e<sup>−t² / (2σ²)</sup></div>
     <div class="eq-label">Eq. 3.4 — Gaussian window</div>
   </div>
 
   <div class="math-block">
-    <div class="equation">W_gauss(f) = σ√(2π) · e^(−2π²σ²f²)</div>
+    <div class="equation">W<sub>gauss</sub>(f) = σ√(2π) · e<sup>−2π²σ²f²</sup></div>
     <div class="eq-label">Eq. 3.5 — Fourier Transform of Gaussian window</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">σ (sigma)</span><span class="def">Standard deviation — controls the window width. Larger σ ⟹ wider window, narrower spectrum</span>
-    <span class="sym">e^(−t²/2σ²)</span><span class="def">Gaussian bell curve. Its Fourier Transform is also Gaussian — the only function with this property</span>
+    <span class="sym">e<sup>−t²/2σ²</sup></span><span class="def">Gaussian bell curve. Its Fourier Transform is also Gaussian — the only function with this property</span>
   </div>
 
   <p>The Gaussian window is unique: it achieves the minimum possible time–frequency area product (it is the "optimal" window in the uncertainty sense). When used in the STFT, the result is called the <strong>Gabor Transform</strong>, after Dennis Gabor who introduced it in 1946.</p>
@@ -536,7 +636,7 @@ footer a:hover { text-decoration: underline; }
   <h3>The Hamming window</h3>
 
   <div class="math-block">
-    <div class="equation">w_hamm(n) = 0.54 − 0.46 · cos(2πn / (N−1))</div>
+    <div class="equation">w<sub>hamm</sub>(n) = 0.54 − 0.46 · cos(2πn / (N−1))</div>
     <div class="eq-label">Eq. 3.6 — Hamming window</div>
   </div>
 
@@ -547,7 +647,7 @@ footer a:hover { text-decoration: underline; }
   <h3>The Blackman window</h3>
 
   <div class="math-block">
-    <div class="equation">w_black(n) = 0.42 − 0.5 · cos(2πn/(N−1)) + 0.08 · cos(4πn/(N−1))</div>
+    <div class="equation">w<sub>black</sub>(n) = 0.42 − 0.5 · cos(2πn/(N−1)) + 0.08 · cos(4πn/(N−1))</div>
     <div class="eq-label">Eq. 3.7 — Blackman window</div>
   </div>
 
@@ -592,13 +692,13 @@ footer a:hover { text-decoration: underline; }
   <p>The Heisenberg–Gabor uncertainty principle is the single most important theoretical result for understanding the STFT. It states that no signal analysis method — not just the STFT, but <em>any</em> linear time–frequency representation — can achieve arbitrarily fine resolution in both time and frequency simultaneously.</p>
 
   <div class="math-block">
-    <div class="equation">σ_t · σ_f  ≥  1 / (4π)</div>
+    <div class="equation">σ<sub>t</sub> · σ<sub>f</sub> &nbsp;≥&nbsp; <span class="eq-frac"><span class="frac-num">1</span><span class="frac-den">4π</span></span></div>
     <div class="eq-label">Eq. 4.1 — Heisenberg–Gabor uncertainty inequality</div>
   </div>
 
   <div class="symbol-table">
-    <span class="sym">σ_t</span><span class="def">Time spread (standard deviation) of the analysis window: σ_t² = ∫ t² |w(t)|² dt / ∫ |w(t)|² dt</span>
-    <span class="sym">σ_f</span><span class="def">Frequency spread (standard deviation) of the window's spectrum: σ_f² = ∫ f² |W(f)|² df / ∫ |W(f)|² df</span>
+    <span class="sym">σ<sub>t</sub></span><span class="def">Time spread (standard deviation) of the analysis window: σ<sub>t</sub>² = ∫ t² |w(t)|² dt &thinsp;/&thinsp; ∫ |w(t)|² dt</span>
+    <span class="sym">σ<sub>f</sub></span><span class="def">Frequency spread (standard deviation) of the window's spectrum: σ<sub>f</sub>² = ∫ f² |W(f)|² df &thinsp;/&thinsp; ∫ |W(f)|² df</span>
     <span class="sym">1/(4π)</span><span class="def">The minimum possible time–frequency area. Equality is achieved only by the Gaussian window</span>
     <span class="sym">≥</span><span class="def">Inequality — the product can never be less than this bound, no matter what window is used</span>
   </div>
@@ -609,23 +709,23 @@ footer a:hover { text-decoration: underline; }
     <h4>Proof via the Cauchy–Schwarz inequality</h4>
     <div class="step">
       <div class="step-eq">1. Define the time and frequency variances about the centroid:</div>
-      <div class="step-why">σ_t² = ‖t · w(t)‖² / ‖w‖²   and   σ_f² = ‖f · W(f)‖² / ‖W‖²</div>
+      <div class="step-why">σ<sub>t</sub>² = ‖t · w(t)‖² / ‖w‖² &nbsp; and &nbsp; σ<sub>f</sub>² = ‖f · W(f)‖² / ‖W‖²</div>
     </div>
     <div class="step">
       <div class="step-eq">2. By Parseval's theorem, ‖W‖² = ‖w‖², so the norms can be computed in either domain.</div>
       <div class="step-why">The Fourier Transform is a unitary operator on L²(ℝ), preserving inner products and norms.</div>
     </div>
     <div class="step">
-      <div class="step-eq">3. In the frequency domain, f · W(f) = ℱ{ (1/j2π) · w'(t) }(f)</div>
-      <div class="step-why">Differentiation in time maps to multiplication by j2πf in frequency. Rearranging: f · W(f) = (1/j2π) ℱ{w'(t)}.</div>
+      <div class="step-eq">3. In the frequency domain, f · W(f) = ℱ{ (1/j2π) · w′(t) }(f)</div>
+      <div class="step-why">Differentiation in time maps to multiplication by j2πf in frequency. Rearranging: f · W(f) = (1/j2π) ℱ{w′(t)}.</div>
     </div>
     <div class="step">
-      <div class="step-eq">4. Apply Cauchy–Schwarz: |⟨ t·w, w' ⟩|² ≤ ‖t·w‖² · ‖w'‖²</div>
-      <div class="step-why">The inner product ⟨t·w, w'⟩ can be evaluated by integration by parts: ⟨t·w, w'⟩ = −½‖w‖² (when w vanishes at ±∞).</div>
+      <div class="step-eq">4. Apply Cauchy–Schwarz: |⟨ t·w, w′ ⟩|² ≤ ‖t·w‖² · ‖w′‖²</div>
+      <div class="step-why">The inner product ⟨t·w, w′⟩ can be evaluated by integration by parts: ⟨t·w, w′⟩ = −½‖w‖² (when w vanishes at ±∞).</div>
     </div>
     <div class="step">
-      <div class="step-eq">5. Combining: σ_t² · σ_f² ≥ (1/4π²) · |⟨t·w, w'⟩|² / ‖w‖⁴ = 1/(16π²)</div>
-      <div class="step-why">Taking square roots: σ_t · σ_f ≥ 1/(4π). ∎</div>
+      <div class="step-eq">5. Combining: σ<sub>t</sub>² · σ<sub>f</sub>² ≥ (1/4π²) · |⟨t·w, w′⟩|² / ‖w‖⁴ = 1/(16π²)</div>
+      <div class="step-why">Taking square roots: σ<sub>t</sub> · σ<sub>f</sub> ≥ 1/(4π). ∎</div>
     </div>
   </div>
 
@@ -667,13 +767,13 @@ footer a:hover { text-decoration: underline; }
   <p>In practice, spectrograms are usually displayed on a logarithmic (dB) scale to compress the enormous dynamic range of real-world signals:</p>
 
   <div class="math-block">
-    <div class="equation">P_dB(τ, f) = 10 · log₁₀( |S(τ, f)|² / P_ref )   [dB]</div>
+    <div class="equation">P<sub>dB</sub>(τ, f) = 10 · log<sub>10</sub>( |S(τ, f)|² / P<sub>ref</sub> ) &nbsp; [dB]</div>
     <div class="eq-label">Eq. 5.2 — Spectrogram in decibels</div>
   </div>
 
   <div class="symbol-table">
-    <span class="sym">P_ref</span><span class="def">Reference power level for the dB scale (often the maximum value, or a physical reference like 20 μPa for acoustics)</span>
-    <span class="sym">log₁₀</span><span class="def">Common (base-10) logarithm. Each 10 dB represents a factor-of-10 change in power</span>
+    <span class="sym">P<sub>ref</sub></span><span class="def">Reference power level for the dB scale (often the maximum value, or a physical reference like 20 μPa for acoustics)</span>
+    <span class="sym">log<sub>10</sub></span><span class="def">Common (base-10) logarithm. Each 10 dB represents a factor-of-10 change in power</span>
   </div>
 
   <div class="canvas-wrap">
@@ -701,47 +801,47 @@ footer a:hover { text-decoration: underline; }
   <p>In practice, signals are sampled and the STFT is computed using the Discrete Fourier Transform (DFT). The discrete STFT of a sampled signal x[n] with window w[n] of length N, hop size H, and DFT size N_FFT is:</p>
 
   <div class="math-block">
-    <div class="equation">S[m, k] = Σ_{n=0}^{N-1}  x[n + mH] · w[n] · e^(−j2πkn/N_FFT)</div>
+    <div class="equation">S[m, k] = <span class="eq-sum"><span class="sum-top">N−1</span><span class="sum-sym">Σ</span><span class="sum-bot">n=0</span></span> x[n + mH] · w[n] · e<sup>−j2πkn/N<sub>FFT</sub></sup></div>
     <div class="eq-label">Eq. 6.1 — Discrete STFT</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">m</span><span class="def">Frame index: the m-th analysis frame starts at sample mH. Each frame produces one spectral column</span>
-    <span class="sym">k</span><span class="def">Frequency bin index: k = 0, 1, …, N_FFT−1. Bin k corresponds to frequency f_k = k · f_s / N_FFT</span>
+    <span class="sym">k</span><span class="def">Frequency bin index: k = 0, 1, …, N<sub>FFT</sub>−1. Bin k corresponds to frequency f<sub>k</sub> = k · f<sub>s</sub> / N<sub>FFT</sub></span>
     <span class="sym">H</span><span class="def">Hop size (samples): the stride between successive frames. H = N means no overlap; H = N/4 (75% overlap) is common</span>
     <span class="sym">N</span><span class="def">Window length in samples</span>
-    <span class="sym">N_FFT</span><span class="def">DFT size. Often N_FFT ≥ N (zero-padding) to interpolate the spectrum for smoother visualisation</span>
+    <span class="sym">N<sub>FFT</sub></span><span class="def">DFT size. Often N<sub>FFT</sub> ≥ N (zero-padding) to interpolate the spectrum for smoother visualisation</span>
     <span class="sym">x[n + mH]</span><span class="def">The signal excerpt starting at sample mH — the m-th frame</span>
     <span class="sym">w[n]</span><span class="def">The analysis window (length N, applied to each frame)</span>
-    <span class="sym">f_s</span><span class="def">Sample rate (Hz). The DFT resolves frequencies from 0 to f_s/2 (Nyquist)</span>
+    <span class="sym">f<sub>s</sub></span><span class="def">Sample rate (Hz). The DFT resolves frequencies from 0 to f<sub>s</sub>/2 (Nyquist)</span>
   </div>
 
   <h3>Frequency resolution</h3>
 
   <div class="math-block">
-    <div class="equation">Δf = f_s / N_FFT   [Hz per bin]</div>
+    <div class="equation">Δf = f<sub>s</sub> / N<sub>FFT</sub> &nbsp; [Hz per bin]</div>
     <div class="eq-label">Eq. 6.2 — Frequency resolution</div>
   </div>
 
   <h3>Time resolution</h3>
 
   <div class="math-block">
-    <div class="equation">Δt = H / f_s   [seconds per frame]</div>
+    <div class="equation">Δt = H / f<sub>s</sub> &nbsp; [seconds per frame]</div>
     <div class="eq-label">Eq. 6.3 — Time resolution (frame spacing)</div>
   </div>
 
   <h3>Zero-padding and spectral interpolation</h3>
 
-  <p>When N_FFT > N, the windowed frame is padded with zeros before the DFT. This does not improve true frequency resolution (the information content is still determined by N), but it interpolates between the DFT bins, producing smoother spectral estimates. It is equivalent to evaluating the DTFT at more densely spaced frequencies.</p>
+  <p>When N<sub>FFT</sub> > N, the windowed frame is padded with zeros before the DFT. This does not improve true frequency resolution (the information content is still determined by N), but it interpolates between the DFT bins, producing smoother spectral estimates. It is equivalent to evaluating the DTFT at more densely spaced frequencies.</p>
 
   <div class="math-block">
-    <div class="equation">If N_FFT = 2N:  visual resolution doubles, but true resolution (main lobe width) is unchanged</div>
+    <div class="equation">If N<sub>FFT</sub> = 2N: &nbsp;visual resolution doubles, but true resolution (main lobe width) is unchanged</div>
     <div class="eq-label">Eq. 6.4 — Zero-padding: interpolation, not resolution</div>
   </div>
 
   <h3>Relation to the DFT</h3>
 
-  <p>Each frame of the STFT is simply a standard DFT applied to the windowed signal segment. The Fast Fourier Transform (FFT) algorithm computes this in O(N_FFT · log N_FFT) operations per frame. For M total frames, the entire STFT costs O(M · N_FFT · log N_FFT).</p>
+  <p>Each frame of the STFT is simply a standard DFT applied to the windowed signal segment. The Fast Fourier Transform (FFT) algorithm computes this in O(N<sub>FFT</sub> · log N<sub>FFT</sub>) operations per frame. For M total frames, the entire STFT costs O(M · N<sub>FFT</sub> · log N<sub>FFT</sub>).</p>
 
   <div class="canvas-wrap">
     <canvas id="c6" width="840" height="400"></canvas>
@@ -789,13 +889,13 @@ footer a:hover { text-decoration: underline; }
   <p>For perfect reconstruction (see Chapter 9), the windows across all frames must sum to a constant at every sample — the <strong>Constant Overlap-Add (COLA)</strong> condition:</p>
 
   <div class="math-block">
-    <div class="equation">Σ_m  w[n − mH] = C,   ∀ n</div>
+    <div class="equation"><span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">m</span></span> w[n − mH] = C, &nbsp; ∀ n</div>
     <div class="eq-label">Eq. 7.2 — COLA condition</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">C</span><span class="def">A constant (independent of n). Typically normalised so that C = 1</span>
-    <span class="sym">Σ_m</span><span class="def">Sum over all frame positions m. At any sample n, the overlapping windows must add to a constant</span>
+    <span class="sym">Σ<sub>m</sub></span><span class="def">Sum over all frame positions m. At any sample n, the overlapping windows must add to a constant</span>
   </div>
 
   <p>The Hann window satisfies COLA at 50% overlap (H = N/2) and 75% overlap (H = N/4). The rectangular window satisfies COLA trivially at 0% overlap (H = N). The Hamming window does <em>not</em> satisfy COLA at 50% overlap — an important practical consideration.</p>
@@ -824,7 +924,7 @@ footer a:hover { text-decoration: underline; }
   <p>The STFT coefficient S[m, k] is complex-valued. It encodes two independent quantities:</p>
 
   <div class="math-block">
-    <div class="equation">S[m, k] = |S[m, k]| · e^(jφ[m,k])</div>
+    <div class="equation">S[m, k] = |S[m, k]| · e<sup>jφ[m,k]</sup></div>
     <div class="eq-label">Eq. 8.1 — Polar form of the STFT</div>
   </div>
 
@@ -836,7 +936,7 @@ footer a:hover { text-decoration: underline; }
   <h3>Magnitude vs. power</h3>
 
   <div class="math-block">
-    <div class="equation">Magnitude: |S[m,k]|       Power: |S[m,k]|²       Log-magnitude: 20·log₁₀(|S[m,k]|)  [dB]</div>
+    <div class="equation">Magnitude: |S[m,k]| &nbsp;&nbsp; Power: |S[m,k]|² &nbsp;&nbsp; Log-magnitude: 20·log<sub>10</sub>(|S[m,k]|) &nbsp;[dB]</div>
     <div class="eq-label">Eq. 8.2 — Three common spectrogram scales</div>
   </div>
 
@@ -845,15 +945,15 @@ footer a:hover { text-decoration: underline; }
   <p>The phase spectrum is critical for signal reconstruction (Chapter 9) and encodes temporal fine structure. The instantaneous frequency can be estimated from the phase derivative:</p>
 
   <div class="math-block">
-    <div class="equation">f_inst[m, k] = f_k + (1/2πΔt) · (φ[m+1, k] − φ[m, k])_unwrapped</div>
+    <div class="equation">f<sub>inst</sub>[m, k] = f<sub>k</sub> + <span class="eq-frac"><span class="frac-num">1</span><span class="frac-den">2πΔt</span></span> · (φ[m+1, k] − φ[m, k])<sub>unwrapped</sub></div>
     <div class="eq-label">Eq. 8.3 — Instantaneous frequency from phase difference</div>
   </div>
 
   <div class="symbol-table">
-    <span class="sym">f_k</span><span class="def">Centre frequency of bin k: f_k = k · f_s / N_FFT</span>
-    <span class="sym">Δt</span><span class="def">Time between successive frames: H / f_s</span>
-    <span class="sym">(·)_unwrapped</span><span class="def">Phase unwrapping: adding ±2π to remove discontinuities in the phase difference</span>
-    <span class="sym">f_inst</span><span class="def">Refined frequency estimate within bin k — used in phase vocoders for high-quality time-stretching</span>
+    <span class="sym">f<sub>k</sub></span><span class="def">Centre frequency of bin k: f<sub>k</sub> = k · f<sub>s</sub> / N<sub>FFT</sub></span>
+    <span class="sym">Δt</span><span class="def">Time between successive frames: H / f<sub>s</sub></span>
+    <span class="sym">(·)<sub>unwrapped</sub></span><span class="def">Phase unwrapping: adding ±2π to remove discontinuities in the phase difference</span>
+    <span class="sym">f<sub>inst</sub></span><span class="def">Refined frequency estimate within bin k — used in phase vocoders for high-quality time-stretching</span>
   </div>
 
   <p>Phase unwrapping is essential because the raw phase difference can alias by multiples of 2π. The phase vocoder algorithm relies on this instantaneous frequency estimate to resynthesize signals at different time scales without altering pitch.</p>
@@ -883,16 +983,16 @@ footer a:hover { text-decoration: underline; }
   <h3>The Overlap-Add (OLA) method</h3>
 
   <div class="math-block">
-    <div class="equation">x̂[n] = (1/C) · Σ_m  w_s[n − mH] · IDFT{ S[m, k] }[n − mH]</div>
+    <div class="equation">x̂[n] = <span class="eq-frac"><span class="frac-num">1</span><span class="frac-den">C</span></span> · <span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">m</span></span> w<sub>s</sub>[n − mH] · IDFT{ S[m, k] }[n − mH]</div>
     <div class="eq-label">Eq. 9.1 — Inverse STFT via overlap-add</div>
   </div>
 
   <div class="symbol-table">
     <span class="sym">x̂[n]</span><span class="def">Reconstructed signal. Equals x[n] exactly when COLA is satisfied</span>
     <span class="sym">IDFT{S[m,k]}</span><span class="def">Inverse DFT of the k-th frame: converts spectral coefficients back to a time-domain frame</span>
-    <span class="sym">w_s[n]</span><span class="def">Synthesis window. May equal the analysis window, or may differ (e.g., dual window for WOLA)</span>
+    <span class="sym">w<sub>s</sub>[n]</span><span class="def">Synthesis window. May equal the analysis window, or may differ (e.g., dual window for WOLA)</span>
     <span class="sym">C</span><span class="def">The COLA sum from Eq. 7.2. Dividing by C normalises the reconstruction</span>
-    <span class="sym">Σ_m</span><span class="def">Sum over all frames — each contributes a windowed time-domain segment, and they overlap-add to reconstruct x</span>
+    <span class="sym">Σ<sub>m</sub></span><span class="def">Sum over all frames — each contributes a windowed time-domain segment, and they overlap-add to reconstruct x</span>
   </div>
 
   <h3>The Weighted Overlap-Add (WOLA) method</h3>
@@ -900,13 +1000,13 @@ footer a:hover { text-decoration: underline; }
   <p>When the synthesis window differs from the analysis window, perfect reconstruction requires:</p>
 
   <div class="math-block">
-    <div class="equation">Σ_m  w_a[n − mH] · w_s[n − mH] = 1,   ∀ n</div>
+    <div class="equation"><span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">m</span></span> w<sub>a</sub>[n − mH] · w<sub>s</sub>[n − mH] = 1, &nbsp; ∀ n</div>
     <div class="eq-label">Eq. 9.2 — WOLA perfect reconstruction condition</div>
   </div>
 
   <div class="symbol-table">
-    <span class="sym">w_a</span><span class="def">Analysis window (used in the forward STFT)</span>
-    <span class="sym">w_s</span><span class="def">Synthesis window (used in the inverse STFT). The product w_a · w_s must satisfy COLA</span>
+    <span class="sym">w<sub>a</sub></span><span class="def">Analysis window (used in the forward STFT)</span>
+    <span class="sym">w<sub>s</sub></span><span class="def">Synthesis window (used in the inverse STFT). The product w<sub>a</sub> · w<sub>s</sub> must satisfy COLA</span>
   </div>
 
   <p>A common choice: use a square-root Hann window for both analysis and synthesis. Since √hann × √hann = hann, and Hann satisfies COLA at 50% overlap, this gives perfect reconstruction with symmetric treatment of analysis and synthesis.</p>
@@ -914,7 +1014,7 @@ footer a:hover { text-decoration: underline; }
   <h3>Parseval's relation for the STFT</h3>
 
   <div class="math-block">
-    <div class="equation">Σ_n |x[n]|² = (1/C) · Σ_m Σ_k |S[m, k]|²</div>
+    <div class="equation"><span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">n</span></span> |x[n]|² = <span class="eq-frac"><span class="frac-num">1</span><span class="frac-den">C</span></span> · <span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">m</span></span> <span class="eq-sum"><span class="sum-top">&nbsp;</span><span class="sum-sym">Σ</span><span class="sum-bot">k</span></span> |S[m, k]|²</div>
     <div class="eq-label">Eq. 9.3 — Energy conservation (Parseval/Plancherel for STFT)</div>
   </div>
 
@@ -952,12 +1052,12 @@ footer a:hover { text-decoration: underline; }
   <p>Vibration monitoring of rotating machinery, modal analysis of structures, EEG/EMG biomedical signal analysis, sonar and radar processing, and telecommunications channel estimation all rely on the STFT or its close variant Welch's method (averaged periodograms from overlapping STFT frames).</p>
 
   <div class="math-block">
-    <div class="equation">P_Welch(f) = (1/M) · Σ_{m=0}^{M-1}  |S[m, f]|²</div>
+    <div class="equation">P<sub>Welch</sub>(f) = <span class="eq-frac"><span class="frac-num">1</span><span class="frac-den">M</span></span> · <span class="eq-sum"><span class="sum-top">M−1</span><span class="sum-sym">Σ</span><span class="sum-bot">m=0</span></span> |S[m, f]|²</div>
     <div class="eq-label">Eq. 10.1 — Welch's method: averaged STFT power spectra</div>
   </div>
 
   <div class="symbol-table">
-    <span class="sym">P_Welch(f)</span><span class="def">Estimated power spectral density at frequency f — lower variance than a single periodogram</span>
+    <span class="sym">P<sub>Welch</sub>(f)</span><span class="def">Estimated power spectral density at frequency f — lower variance than a single periodogram</span>
     <span class="sym">M</span><span class="def">Number of overlapping frames averaged. More frames ⟹ smoother estimate, but requires longer signals</span>
   </div>
 
