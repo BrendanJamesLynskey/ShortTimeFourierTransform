@@ -52,39 +52,6 @@ Welch's method for power spectral density estimation (Eq. 10.1). A continuously-
 
 ---
 
-## Deploy to GitHub Pages
-
-The project is a single `index.html` file.
-
-**Option A — Repository root:**
-
-```
-git init stft-guide && cd stft-guide
-# copy index.html into this directory
-git add index.html
-git commit -m "Initial commit"
-git remote add origin git@github.com:yourusername/stft-guide.git
-git push -u origin main
-```
-
-Then go to **Settings → Pages → Source → Deploy from a branch → `main` / `/ (root)`**.
-
-**Option B — `docs/` folder:**
-
-```
-mkdir docs
-cp index.html docs/
-git add docs/
-git commit -m "Add guide to docs/"
-git push
-```
-
-Set Pages source to `main` / `/docs`.
-
-Your guide will be live at `https://yourusername.github.io/stft-guide/`.
-
----
-
 ## Technical Details
 
 * **Zero dependencies.** Pure HTML + Canvas + vanilla JavaScript. No npm, no bundler, no framework.
