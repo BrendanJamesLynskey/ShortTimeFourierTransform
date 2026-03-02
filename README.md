@@ -2,7 +2,7 @@
 
 An interactive, animated guide to the Short-Time Fourier Transform (STFT), the most fundamental time–frequency representation in signal processing. Built entirely with vanilla HTML Canvas and JavaScript — zero dependencies. Significantly more detailed than its companion guides, with full equation derivations and symbol-by-symbol breakdowns throughout.
 
-**[→ View the Live Guide](https://brendanjameslynskey.github.io/STFT-Guide/)**
+**[→ View the Live Guide](https://brendanjameslynskey.github.io/ShortTimeFourierTransform/)**
 
 ---
 
